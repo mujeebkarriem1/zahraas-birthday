@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Wife ❤️</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+    overflow:hidden;
+    color:#333;
+}
+
+.page {
+    display:none;
+    height:100vh;
+    width:100vw;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.active { display:block; }
+
+img {
+    width:85%;
+    max-width:320px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+.text {
+    margin-top:20px;
+    font-size:18px;
+    min-height:100px;
+}
+
+button {
+    margin-top:20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    background:#ff69b4;
+    color:white;
+    font-size:16px;
+}
+
+/* cake */
+.cake {
+    margin:40px auto;
+    width:150px;
+    height:150px;
+    background:#ff69b4;
+    border-radius:10px;
+    position:relative;
+}
+.candle {
+    width:10px;
+    height:40px;
+    background:white;
+    position:absolute;
+    top:-40px;
+    left:70px;
+}
+.flame {
+    width:10px;
+    height:15px;
+    background:orange;
+    border-radius:50%;
+    position:absolute;
+    top:-15px;
+}
+.hidden { display:none; }
+
+/* hearts */
+.heart {
+    position: absolute;
+    color: red;
+    animation: float 5s linear infinite;
+}
+@keyframes float {
+    from { transform: translateY(100vh); opacity:1; }
+    to { transform: translateY(-10vh); opacity:0; }
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+<source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mp3">
+</audio>
+
+<!-- PAGE 1 -->
+<div class="page active">
+<h2>Happy Birthday My Love ❤️</h2>
+<img src="photo1.jpg">
+<div class="text" id="text1"></div>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+
+<!-- PAGE 2 CAKE -->
+<div class="page">
+<h2>Make a wish 🎂</h2>
+<div class="cake">
+<div class="candle">
+<div class="flame" id="flame"></div>
+</div>
+</div>
+<p>Blow into the mic 🎤</p>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+<img src="photo2.jpg">
+<div class="text" id="text3"></div>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+<img src="photo3.jpg">
+<div class="text" id="text4"></div>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page">
+<img src="photo4.jpg">
+<div class="text" id="text5"></div>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page">
+<img src="photo5.jpg">
+<div class="text" id="text6"></div>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+
+<!-- PAGE 7 -->
+<div class="page">
+<img src="photo6.jpg">
+<div class="text" id="text7"></div>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+
+<!-- PAGE 8 FINAL -->
+<div class="page">
+<div class="text" id="text8"></div>
+</div>
+
+<script>
+let currentPage = 0;
+const pages = document.querySelectorAll(".page");
+
+function nextPage() {
+    pages[currentPage].classList.remove("active");
+    currentPage++;
+    pages[currentPage].classList.add("active");
+    startTyping();
+}
+
+function typeWriter(text, elementId, speed=40) {
+    let i = 0;
+    const el = document.getElementById(elementId);
+    el.innerHTML = "";
+    function typing() {
+        if (i < text.length) {
+            el.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+    typing();
+}
+
+function startTyping() {
+    if(currentPage === 0){
+        typeWriter("You make my life brighter every single day. This is our first birthday married, and I’m so lucky to call you my wife ❤️", "text1");
+    }
+    if(currentPage === 2){
+        typeWriter("Happy 25th birthday to my WIFEEE… ugh sorry I meant 22nd 😉", "text3");
+    }
+    if(currentPage === 3){
+        typeWriter("What a year it's been since the last one ❤️", "text4");
+    }
+    if(currentPage === 4){
+        typeWriter("We went shark cage diving 🦈", "text5");
+    }
+    if(currentPage === 5){
+        typeWriter("On many trips together ✈️", "text6");
+    }
+    if(currentPage === 6){
+        typeWriter("WE GOT MARRIED!!!!!!! 💍 And the best part… I get to spend every single day with you from now till forever ❤️", "text7");
+    }
+    if(currentPage === 7){
+        typeWriter("I want to take this chance to tell you how proud I am of you.\n\nThis is the 5th time I get to celebrate your birthday with you, and I’ve seen you grow in ways many people only dream of. I am so proud of how far you’ve come.\n\nI know work is tough, but I remember when all of this felt so far away… and now look at you — married, and one exam away from finishing.\n\nI appreciate every day I get to see your beautiful face, hear your laugh, and experience all your different personalities 😂\n\nI love you more than words can ever explain.\n\nHappy Birthday my gorgeous wife ❤️\nEnjoy your weekend and your presents 🎁", "text8", 25);
+    }
+}
+
+startTyping();
+
+/* mic blow */
+async function setupMic() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioContext = new AudioContext();
+    const mic = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+
+    mic.connect(analyser);
+    analyser.fftSize = 256;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    function detectBlow() {
+        analyser.getByteFrequencyData(dataArray);
+        let volume = dataArray.reduce((a,b)=>a+b)/dataArray.length;
+
+        if(volume > 60){
+            document.getElementById("flame").classList.add("hidden");
+            setTimeout(nextPage, 1000);
+        }
+        requestAnimationFrame(detectBlow);
+    }
+    detectBlow();
+}
+setupMic();
+
+/* floating hearts */
+setInterval(()=>{
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random()*100+"vw";
+    heart.style.fontSize = (Math.random()*20+10)+"px";
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{ heart.remove(); },5000);
+},300);
+</script>
+
+</body>
+</html>
