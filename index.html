@@ -15,12 +15,11 @@ body {
     overflow:hidden;
 }
 
-/* BOOK */
 .book {
     position:relative;
     width:100%;
     height:100vh;
-    perspective:1500px;
+    perspective:1200px;
 }
 
 .page {
@@ -28,10 +27,10 @@ body {
     width:100%;
     height:100%;
     background:#cce7ff;
-    box-shadow:0 0 20px rgba(0,0,0,0.2);
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
     transform-origin:left;
     transform:rotateY(180deg);
-    transition:transform 0.8s ease;
+    transition:0.7s;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -39,19 +38,18 @@ body {
     padding:20px;
 }
 
-.page.active { transform:rotateY(0deg); z-index:2; }
+.page.active { transform:rotateY(0); z-index:2; }
 .page.flipped { transform:rotateY(-180deg); }
 
 img {
-    width:85%;
-    max-width:320px;
+    width:80%;
+    max-width:300px;
     border-radius:20px;
 }
 
 .text {
     margin-top:20px;
     font-size:18px;
-    min-height:160px;
     white-space:pre-line;
 }
 
@@ -62,19 +60,17 @@ img {
 
 button {
     padding:10px 15px;
-    margin:5px;
     border:none;
-    border-radius:12px;
-    background:white;
-    font-weight:bold;
+    border-radius:10px;
+    margin:5px;
 }
 
-/* CAKE */
+/* cake */
 .cake {
     position:absolute;
     bottom:80px;
-    width:150px;
-    height:150px;
+    width:140px;
+    height:140px;
     background:#ff69b4;
     border-radius:10px;
 }
@@ -85,10 +81,9 @@ button {
     background:white;
     position:absolute;
     top:-50px;
-    left:70px;
+    left:65px;
 }
 
-/* FLAME */
 .flame {
     width:20px;
     height:30px;
@@ -101,53 +96,27 @@ button {
 }
 
 @keyframes flicker {
-    0% { transform:scale(1); }
     50% { transform:scale(1.2); }
-    100% { transform:scale(1); }
 }
 
-/* SMOKE */
+/* smoke effect */
 .smoke {
     position:absolute;
-    width:10px;
-    height:10px;
-    background:gray;
+    top:-40px;
+    left:-5px;
+    width:20px;
+    height:20px;
+    background:rgba(200,200,200,0.6);
     border-radius:50%;
-    opacity:0;
+    animation:rise 2s forwards;
 }
 
-.smoke.show {
-    animation:smokeUp 2s forwards;
+@keyframes rise {
+    0% { transform:translateY(0) scale(0.5); opacity:0.8; }
+    100% { transform:translateY(-80px) scale(1.5); opacity:0; }
 }
 
-@keyframes smokeUp {
-    0% { transform:translateY(0); opacity:1;}
-    100% { transform:translateY(-80px); opacity:0;}
-}
-
-/* HEARTS */
-.heart {
-    position:absolute;
-    color:red;
-    animation:float 5s linear infinite;
-}
-@keyframes float {
-    from { transform:translateY(100vh); opacity:1;}
-    to { transform:translateY(-10vh); opacity:0;}
-}
-
-/* STARS */
-.star {
-    position:absolute;
-    width:3px;
-    height:3px;
-    background:white;
-    animation:shoot 2s linear infinite;
-}
-@keyframes shoot {
-    from { transform:translate(0,0); opacity:1;}
-    to { transform:translate(300px,300px); opacity:0;}
-}
+.hidden { display:none; }
 
 .music-btn {
     position:absolute;
@@ -167,6 +136,7 @@ button {
 
 <div class="book">
 
+<!-- PAGE 1 -->
 <div class="page active">
 <h2>Happy Birthday My Love ❤️</h2>
 <img src="photo1.jpg">
@@ -176,6 +146,7 @@ button {
 </div>
 </div>
 
+<!-- PAGE 2 -->
 <div class="page">
 <h2>Make a wish 🎂</h2>
 <p>Blow into the mic 🎤</p>
@@ -183,7 +154,6 @@ button {
 <div class="cake">
 <div class="candle">
 <div class="flame" id="flame"></div>
-<div class="smoke" id="smoke"></div>
 </div>
 </div>
 
@@ -193,56 +163,62 @@ button {
 </div>
 </div>
 
+<!-- PAGE 3 -->
 <div class="page">
 <img src="photo2.jpg">
 <div class="text" id="text3"></div>
 <div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
+<button onclick="prevPage()">⬅️</button>
+<button onclick="nextPage()">➡️</button>
 </div>
 </div>
 
+<!-- PAGE 4 -->
 <div class="page">
 <img src="photo3.jpg">
 <div class="text" id="text4"></div>
 <div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
+<button onclick="prevPage()">⬅️</button>
+<button onclick="nextPage()">➡️</button>
 </div>
 </div>
 
+<!-- PAGE 5 -->
 <div class="page">
 <img src="photo4.jpg">
 <div class="text" id="text5"></div>
 <div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
+<button onclick="prevPage()">⬅️</button>
+<button onclick="nextPage()">➡️</button>
 </div>
 </div>
 
+<!-- PAGE 6 -->
 <div class="page">
 <img src="photo5.jpg">
 <div class="text" id="text6"></div>
 <div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
+<button onclick="prevPage()">⬅️</button>
+<button onclick="nextPage()">➡️</button>
 </div>
 </div>
 
+<!-- PAGE 7 -->
 <div class="page">
 <img src="photo6.jpg">
 <div class="text" id="text7"></div>
 <div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
+<button onclick="prevPage()">⬅️</button>
+<button onclick="nextPage()">➡️</button>
 </div>
 </div>
 
+<!-- FINAL -->
 <div class="page">
 <div class="text" id="text8"></div>
 <div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="finish()">Finish ❤️</button>
+<button onclick="prevPage()">⬅️</button>
+<button onclick="finish()">❤️</button>
 </div>
 </div>
 
@@ -251,8 +227,9 @@ button {
 <script>
 let currentPage=0;
 const pages=document.querySelectorAll(".page");
+const flame=document.getElementById("flame");
+const music=document.getElementById("music");
 let musicStarted=false;
-let finalStarted=false;
 
 function showPage(i){
     pages.forEach((p,index)=>{
@@ -260,12 +237,6 @@ function showPage(i){
         if(index<i) p.classList.add("flipped");
         if(index===i) p.classList.add("active");
     });
-
-    if(i===7 && !finalStarted){
-        startFinalEffects();
-        finalStarted=true;
-    }
-
     startTyping();
 }
 
@@ -273,10 +244,17 @@ function nextPage(){ if(currentPage<pages.length-1){currentPage++;showPage(curre
 function prevPage(){ if(currentPage>0){currentPage--;showPage(currentPage);} }
 
 function typeWriter(text,id,speed=25){
-    let i=0; let el=document.getElementById(id);
+    let i=0;
+    let el=document.getElementById(id);
     if(!el) return;
     el.innerHTML="";
-    function t(){ if(i<text.length){ el.innerHTML+=text.charAt(i); i++; setTimeout(t,speed);} }
+    function t(){
+        if(i<text.length){
+            el.innerHTML+=text.charAt(i);
+            i++;
+            setTimeout(t,speed);
+        }
+    }
     t();
 }
 
@@ -300,79 +278,14 @@ function startTyping(){
         typeWriter("WE GOT MARRIED!!!!!!! 💍 And the best part is I get to spend every single day with you from now until forever ❤️","text7");
     }
     if(currentPage===7){
-        typeWriter("I want to take this chance to tell you how proud I am of you...\n\nHappy birthday my gorgeous wife ❤️","text8",20);
+        typeWriter("I want to take this chance to tell you how proud I am of you...\n\nHappy birthday my gorgeous wife ❤️","text8");
     }
 }
 
-/* MIC + MUSIC SYNC */
-const flame=document.getElementById("flame");
-const smoke=document.getElementById("smoke");
-const music=document.getElementById("music");
-
+/* MIC detection */
 async function setupMic(){
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    const ctx=new AudioContext();
-    const mic=ctx.createMediaStreamSource(stream);
-    const analyser=ctx.createAnalyser();
-
-    mic.connect(analyser);
-    analyser.fftSize=256;
-    const data=new Uint8Array(analyser.frequencyBinCount);
-
-    function detect(){
-        analyser.getByteFrequencyData(data);
-        let volume=data.reduce((a,b)=>a+b)/data.length;
-
-        if(volume>60 && !flame.classList.contains("hidden")){
-            flame.classList.add("hidden");
-            smoke.classList.add("show");
-
-            if(!musicStarted){
-                music.play();
-                musicStarted=true;
-            }
-        }
-        requestAnimationFrame(detect);
-    }
-    detect();
-}
-setupMic();
-
-/* RESET */
-setInterval(()=>{
-    flame.classList.remove("hidden");
-    smoke.classList.remove("show");
-},10000);
-
-/* MUSIC BUTTON */
-function toggleMusic(){
-    music.paused ? music.play() : music.pause();
-}
-
-/* FINAL EFFECTS */
-function startFinalEffects(){
-    setInterval(()=>{
-        let heart=document.createElement("div");
-        heart.className="heart";
-        heart.innerHTML="❤️";
-        heart.style.left=Math.random()*100+"vw";
-        document.body.appendChild(heart);
-        setTimeout(()=>heart.remove(),5000);
-    },400);
-
-    setInterval(()=>{
-        let star=document.createElement("div");
-        star.className="star";
-        star.style.top=Math.random()*100+"vh";
-        document.body.appendChild(star);
-        setTimeout(()=>star.remove(),2000);
-    },600);
-}
-
-function finish(){
-    document.body.innerHTML="<h1 style='text-align:center;margin-top:40vh;color:white;'>I love you forever ❤️</h1>";
-}
-</script>
-
-</body>
-</html>
+    try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        const ctx=new AudioContext();
+        const mic=ctx.createMediaStreamSource(stream);
+        const analyser=ctx.createAnalyser
