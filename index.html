@@ -1,1 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Wife ❤️</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin:0;
+    font-family:'Fredoka', sans-serif;
+    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+    overflow:hidden;
+}
+
+.book {
+    position:relative;
+    width:100%;
+    height:100vh;
+    perspective:1200px;
+}
+
+.page {
+    position:absolute;
+    width:100%;
+    height:100%;
+    transform-origin:left;
+    transform:rotateY(180deg);
+    transition:transform 0.8s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    padding:20px;
+}
+
+.page.active { transform:rotateY(0deg); z-index:2; }
+.page.flipped { transform:rotateY(-180deg); }
+
+img {
+    width:85%;
+    max-width:320px;
+    border-radius:20px;
+}
+
+.text {
+    margin-top:20px;
+    font-size:18px;
+    min-height:140px;
+    white-space:pre-line;
+}
+
+.controls {
+    position:absolute;
+    bottom:20px;
+}
+
+button {
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    color:#333;
+    font-weight:bold;
+}
+
+.cake {
+    position:absolute;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%);
+    width:150px;
+    height:150px;
+    background:#ff69b4;
+    border-radius:10px;
+}
+
+.candle {
+    width:10px;
+    height:40px;
+    background:white;
+    position:absolute;
+    top:-40px;
+    left:70px;
+}
+
+.flame {
+    width:10px;
+    height:15px;
+    background:orange;
+    border-radius:50%;
+    position:absolute;
+    top:-15px;
+}
+
+.hidden { display:none; }
+
+.music-btn {
+    position:absolute;
+    top:20px;
+    right:20px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+<source src="YOUR-MUSIC-LINK.mp3" type="audio/mp3">
+</audio>
+
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
+
+<div class="book">
+
+<!-- PAGE 1 -->
+<div class="page active">
+<h2>Happy Birthday My Love ❤️</h2>
+<img src="photo1.jpg">
+<div class="text" id="text1"></div>
+<div class="controls">
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+<h2>Make a wish 🎂</h2>
+<p>Blow into the mic 🎤</p>
+
+<div class="cake">
+<div class="candle">
+<div class="flame" id="flame"></div>
+</div>
+</div>
+
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+<img src="photo2.jpg">
+<div class="text" id="text3"></div>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+<img src="photo3.jpg">
+<div class="text" id="text4"></div>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page">
+<img src="photo4.jpg">
+<div class="text" id="text5"></div>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page">
+<img src="photo5.jpg">
+<div class="text" id="text6"></div>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 7 -->
+<div class="page">
+<img src="photo6.jpg">
+<div class="text" id="text7"></div>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="nextPage()">Next ➡️</button>
+</div>
+</div>
+
+<!-- PAGE 8 -->
+<div class="page">
+<div class="text" id="text8"></div>
+<div class="controls">
+<button onclick="prevPage()">⬅️ Back</button>
+<button onclick="finish()">Finish ❤️</button>
+</div>
+</div>
+
+</div>
+
+<script>
+let currentPage = 0;
+const pages = document.querySelectorAll(".page");
+
+function showPage(index){
+    pages.forEach((p,i)=>{
+        p.classList.remove("active","flipped");
+        if(i < index) p.classList.add("flipped");
+        if(i === index) p.classList.add("active");
+    });
+    startTyping();
+}
+
+function nextPage(){
+    if(currentPage < pages.length-1){
+        currentPage++;
+        showPage(currentPage);
+    }
+}
+
+function prevPage(){
+    if(currentPage > 0){
+        currentPage--;
+        showPage(currentPage);
+    }
+}
+
+function typeWriter(text,id,speed=30){
+    let i=0;
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML="";
+    function typing(){
+        if(i<text.length){
+            el.innerHTML+=text.charAt(i);
+            i++;
+            setTimeout(typing,speed);
+        }
+    }
+    typing();
+}
+
+function startTyping(){
+    if(currentPage===0){
+        typeWriter("You make my life brighter every single day. This is our first birthday married and I’m so lucky to call you my wife ❤️","text1");
+    }
+    if(currentPage===2){
+        typeWriter("Happy 25th birthday to my WIFEEE. Ugh sorry I meant 22nd 😉","text3");
+    }
+    if(currentPage===3){
+        typeWriter("What a year it's been since the last one ❤️","text4");
+    }
+    if(currentPage===4){
+        typeWriter("We went shark cage diving 🦈","text5");
+    }
+    if(currentPage===5){
+        typeWriter("On many trips together ✈️","text6");
+    }
+    if(currentPage===6){
+        typeWriter("WE GOT MARRIED!!!!!!! 💍 And the best part… I get to spend every single day with you from now till forever ❤️","text7");
+    }
+    if(currentPage===7){
+        typeWriter("I want to take this chance to tell you how proud I am of you.\n\nThis is the 5th time I get to celebrate your birthday with you and I’ve seen you grow so much.\n\nI am so proud of you.\n\nI appreciate every day I get to see your beautiful face and hear your laugh 😂\n\nI love you more than words can explain.\n\nHappy Birthday my gorgeous wife ❤️","text8",25);
+    }
+}
+
+async function setupMic(){
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    const ctx = new AudioContext();
+    const mic = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser();
+
+    mic.connect(analyser);
+    analyser.fftSize=256;
+    const data=new Uint8Array(analyser.frequencyBinCount);
+
+    function detect(){
+        analyser.getByteFrequencyData(data);
+        let volume=data.reduce((a,b)=>a+b)/data.length;
+
+        if(volume>60){
+            document.getElementById("flame").classList.add("hidden");
+        }
+        requestAnimationFrame(detect);
+    }
+    detect();
+}
+setupMic();
+
+function toggleMusic(){
+    const music=document.getElementById("music");
+    if(music.paused){
+        music.play();
+    } else {
+        music.pause();
+    }
+}
+
+function finish(){
+    document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:40vh;font-family:Fredoka;'>I love you forever ❤️</h1>";
+}
+</script>
+
+</body>
+</html>
