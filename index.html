@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -12,14 +13,14 @@ body {
     margin:0;
     font-family:'Fredoka', sans-serif;
     background:#3fa9f5;
-    overflow:hidden;
+    overflow:auto;
 }
 
 .book {
     position:relative;
     width:100%;
     height:100vh;
-    perspective:1200px;
+    perspective:2000px;
 }
 
 .page {
@@ -36,6 +37,7 @@ body {
     align-items:center;
     justify-content:center;
     padding:20px;
+    backface-visibility:hidden;
 }
 
 .page.active { transform:rotateY(0); z-index:2; }
@@ -51,6 +53,7 @@ img {
     margin-top:20px;
     font-size:18px;
     white-space:pre-line;
+    text-align:center;
 }
 
 .controls {
@@ -87,33 +90,17 @@ button {
 .flame {
     width:20px;
     height:30px;
-    background:orange;
+    background:radial-gradient(circle, yellow 20%, orange 60%, red);
     border-radius:50%;
     position:absolute;
     top:-30px;
     left:-5px;
-    animation:flicker 0.2s infinite;
+    animation:flicker 0.15s infinite alternate;
 }
 
 @keyframes flicker {
-    50% { transform:scale(1.2); }
-}
-
-/* smoke effect */
-.smoke {
-    position:absolute;
-    top:-40px;
-    left:-5px;
-    width:20px;
-    height:20px;
-    background:rgba(200,200,200,0.6);
-    border-radius:50%;
-    animation:rise 2s forwards;
-}
-
-@keyframes rise {
-    0% { transform:translateY(0) scale(0.5); opacity:0.8; }
-    100% { transform:translateY(-80px) scale(1.5); opacity:0; }
+    0% { transform: scale(1) rotate(-2deg); }
+    100% { transform: scale(1.2) rotate(2deg); }
 }
 
 .hidden { display:none; }
@@ -124,6 +111,7 @@ button {
     right:20px;
 }
 </style>
+
 </head>
 
 <body>
@@ -137,6 +125,7 @@ button {
 <div class="book">
 
 <!-- PAGE 1 -->
+
 <div class="page active">
 <h2>Happy Birthday My Love ❤️</h2>
 <img src="photo1.jpg">
@@ -147,6 +136,7 @@ button {
 </div>
 
 <!-- PAGE 2 -->
+
 <div class="page">
 <h2>Make a wish 🎂</h2>
 <p>Blow into the mic 🎤</p>
@@ -163,57 +153,16 @@ button {
 </div>
 </div>
 
-<!-- PAGE 3 -->
-<div class="page">
-<img src="photo2.jpg">
-<div class="text" id="text3"></div>
-<div class="controls">
-<button onclick="prevPage()">⬅️</button>
-<button onclick="nextPage()">➡️</button>
-</div>
-</div>
+<!-- OTHER PAGES -->
 
-<!-- PAGE 4 -->
-<div class="page">
-<img src="photo3.jpg">
-<div class="text" id="text4"></div>
-<div class="controls">
-<button onclick="prevPage()">⬅️</button>
-<button onclick="nextPage()">➡️</button>
-</div>
-</div>
-
-<!-- PAGE 5 -->
-<div class="page">
-<img src="photo4.jpg">
-<div class="text" id="text5"></div>
-<div class="controls">
-<button onclick="prevPage()">⬅️</button>
-<button onclick="nextPage()">➡️</button>
-</div>
-</div>
-
-<!-- PAGE 6 -->
-<div class="page">
-<img src="photo5.jpg">
-<div class="text" id="text6"></div>
-<div class="controls">
-<button onclick="prevPage()">⬅️</button>
-<button onclick="nextPage()">➡️</button>
-</div>
-</div>
-
-<!-- PAGE 7 -->
-<div class="page">
-<img src="photo6.jpg">
-<div class="text" id="text7"></div>
-<div class="controls">
-<button onclick="prevPage()">⬅️</button>
-<button onclick="nextPage()">➡️</button>
-</div>
-</div>
+<div class="page"><img src="photo2.jpg"><div class="text" id="text3"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
+<div class="page"><img src="photo3.jpg"><div class="text" id="text4"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
+<div class="page"><img src="photo4.jpg"><div class="text" id="text5"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
+<div class="page"><img src="photo5.jpg"><div class="text" id="text6"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
+<div class="page"><img src="photo6.jpg"><div class="text" id="text7"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 
 <!-- FINAL -->
+
 <div class="page">
 <div class="text" id="text8"></div>
 <div class="controls">
@@ -229,7 +178,9 @@ let currentPage=0;
 const pages=document.querySelectorAll(".page");
 const flame=document.getElementById("flame");
 const music=document.getElementById("music");
+
 let musicStarted=false;
+let typedPages={};
 
 function showPage(i){
     pages.forEach((p,index)=>{
@@ -237,6 +188,12 @@ function showPage(i){
         if(index<i) p.classList.add("flipped");
         if(index===i) p.classList.add("active");
     });
+
+    // reset flame
+    if(i===1 && flame){
+        flame.classList.remove("hidden");
+    }
+
     startTyping();
 }
 
@@ -244,10 +201,13 @@ function nextPage(){ if(currentPage<pages.length-1){currentPage++;showPage(curre
 function prevPage(){ if(currentPage>0){currentPage--;showPage(currentPage);} }
 
 function typeWriter(text,id,speed=25){
+    if(typedPages[id]) return;
+    typedPages[id]=true;
+
     let i=0;
     let el=document.getElementById(id);
     if(!el) return;
-    el.innerHTML="";
+
     function t(){
         if(i<text.length){
             el.innerHTML+=text.charAt(i);
@@ -282,10 +242,82 @@ function startTyping(){
     }
 }
 
-/* MIC detection */
+/* MIC IMPROVED */
 async function setupMic(){
     try{
         const stream=await navigator.mediaDevices.getUserMedia({audio:true});
         const ctx=new AudioContext();
         const mic=ctx.createMediaStreamSource(stream);
-        const analyser=ctx.createAnalyser
+        const analyser=ctx.createAnalyser();
+
+        mic.connect(analyser);
+        analyser.fftSize=256;
+        const data=new Uint8Array(analyser.frequencyBinCount);
+
+        let blowStrength=0;
+
+        function detect(){
+            analyser.getByteFrequencyData(data);
+            let volume=data.reduce((a,b)=>a+b)/data.length;
+
+            if(volume>85){
+                blowStrength++;
+            } else {
+                blowStrength=0;
+            }
+
+            if(blowStrength>5){
+                flame.classList.add("hidden");
+
+                // smoke effect
+                const smoke=document.createElement("div");
+                smoke.innerHTML="💨";
+                smoke.style.position="absolute";
+                smoke.style.top="-40px";
+                smoke.style.left="-5px";
+                smoke.style.fontSize="20px";
+                flame.parentElement.appendChild(smoke);
+
+                setTimeout(()=>smoke.remove(),1000);
+
+                if(!musicStarted){
+                    music.play();
+                    musicStarted=true;
+                }
+
+                blowStrength=0;
+            }
+
+            requestAnimationFrame(detect);
+        }
+        detect();
+    } catch(e){
+        console.log("Mic blocked");
+    }
+}
+setupMic();
+
+/* music fallback */
+document.body.addEventListener("click",()=>{
+    if(!musicStarted){
+        music.play();
+        musicStarted=true;
+    }
+},{once:true});
+
+function toggleMusic(){
+    music.paused ? music.play() : music.pause();
+}
+
+function finish(){
+    document.body.innerHTML=`
+    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:white;text-align:center;">
+        <h1>I love you forever ❤️</h1>
+        <p>You are my everything.</p>
+        <p>Happy Birthday my wife 🎂</p>
+    </div>`;
+}
+</script>
+
+</body>
+</html>
