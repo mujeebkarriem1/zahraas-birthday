@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -68,6 +67,12 @@ button {
     margin:5px;
 }
 
+.music-btn {
+    position:absolute;
+    top:20px;
+    right:20px;
+}
+
 /* cake */
 .cake {
     position:absolute;
@@ -104,14 +109,7 @@ button {
 }
 
 .hidden { display:none; }
-
-.music-btn {
-    position:absolute;
-    top:20px;
-    right:20px;
-}
 </style>
-
 </head>
 
 <body>
@@ -125,48 +123,38 @@ button {
 <div class="book">
 
 <!-- PAGE 1 -->
-
 <div class="page active">
 <h2>Happy Birthday My Love ❤️</h2>
 <img src="photo1.jpg">
 <div class="text" id="text1"></div>
-<div class="controls">
-<button onclick="nextPage()">Next ➡️</button>
-</div>
+<div class="controls"><button onclick="nextPage()">Next ➡️</button></div>
 </div>
 
 <!-- PAGE 2 -->
-
 <div class="page">
 <h2>Make a wish 🎂</h2>
 <p>Blow into the mic 🎤</p>
-
-<div class="cake">
-<div class="candle">
-<div class="flame" id="flame"></div>
-</div>
+<div class="cake"><div class="candle"><div class="flame" id="flame"></div></div></div>
+<div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div>
 </div>
 
-<div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="nextPage()">Next ➡️</button>
-</div>
-</div>
-
-<!-- OTHER PAGES -->
-
+<!-- PAGES -->
 <div class="page"><img src="photo2.jpg"><div class="text" id="text3"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo3.jpg"><div class="text" id="text4"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo4.jpg"><div class="text" id="text5"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo5.jpg"><div class="text" id="text6"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo6.jpg"><div class="text" id="text7"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 
-<!-- FINAL -->
-
+<!-- SECOND LAST PAGE -->
 <div class="page">
 <div class="text" id="text8"></div>
+<div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div>
+</div>
+
+<!-- FINAL PAGE -->
+<div class="page">
 <div class="controls">
-<button onclick="prevPage()">⬅️</button>
+<button onclick="prevPage()">⬅️ Back</button>
 <button onclick="finish()">❤️</button>
 </div>
 </div>
@@ -188,26 +176,19 @@ function showPage(i){
         if(index<i) p.classList.add("flipped");
         if(index===i) p.classList.add("active");
     });
-
-    // reset flame
-    if(i===1 && flame){
-        flame.classList.remove("hidden");
-    }
-
+    if(i===1 && flame){ flame.classList.remove("hidden"); }
     startTyping();
 }
 
 function nextPage(){ if(currentPage<pages.length-1){currentPage++;showPage(currentPage);} }
 function prevPage(){ if(currentPage>0){currentPage--;showPage(currentPage);} }
 
-function typeWriter(text,id,speed=25){
+function typeWriter(text,id,speed=20){
     if(typedPages[id]) return;
     typedPages[id]=true;
-
     let i=0;
     let el=document.getElementById(id);
     if(!el) return;
-
     function t(){
         if(i<text.length){
             el.innerHTML+=text.charAt(i);
@@ -238,84 +219,48 @@ function startTyping(){
         typeWriter("WE GOT MARRIED!!!!!!! 💍 And the best part is I get to spend every single day with you from now until forever ❤️","text7");
     }
     if(currentPage===7){
-        typeWriter("I want to take this chance to tell you how proud I am of you...\n\nHappy birthday my gorgeous wife ❤️","text8");
+        typeWriter(`I want to take this chance to tell you how proud I am of you.
+
+This is the 5th time in a row I get to celebrate your birthday with you, and I’ve had the privilege of watching you grow in ways many people only dream of. I am so proud of how far you’ve come.
+
+Yes, I know work is tough and we both dread it sometimes, but I remember when you thought all of this was so far away and we’d never get here. Now you’re married and have one exam left until you’re completely finished — and I am so, so proud of the person you’re becoming.
+
+I appreciate every day I get to see your beautiful face, hear your beautiful laugh, and experience all your different charismatic personalities 🤣🤣🤣🤣
+
+I love you more than words can tell.
+
+Happy birthday, my gorgeous WIFE ❤️
+
+I hope you have the best birthday weekend ever. Enjoy your presents.`,"text8");
     }
 }
 
-/* MIC IMPROVED */
+/* MIC detection */
 async function setupMic(){
     try{
         const stream=await navigator.mediaDevices.getUserMedia({audio:true});
         const ctx=new AudioContext();
         const mic=ctx.createMediaStreamSource(stream);
         const analyser=ctx.createAnalyser();
-
         mic.connect(analyser);
         analyser.fftSize=256;
         const data=new Uint8Array(analyser.frequencyBinCount);
 
-        let blowStrength=0;
-
         function detect(){
             analyser.getByteFrequencyData(data);
             let volume=data.reduce((a,b)=>a+b)/data.length;
-
-            if(volume>85){
-                blowStrength++;
-            } else {
-                blowStrength=0;
-            }
-
-            if(blowStrength>5){
-                flame.classList.add("hidden");
-
-                // smoke effect
-                const smoke=document.createElement("div");
-                smoke.innerHTML="💨";
-                smoke.style.position="absolute";
-                smoke.style.top="-40px";
-                smoke.style.left="-5px";
-                smoke.style.fontSize="20px";
-                flame.parentElement.appendChild(smoke);
-
-                setTimeout(()=>smoke.remove(),1000);
-
-                if(!musicStarted){
-                    music.play();
-                    musicStarted=true;
-                }
-
-                blowStrength=0;
-            }
-
+            if(volume>95){ flame.classList.add("hidden"); if(!musicStarted){ music.play(); musicStarted=true; } }
             requestAnimationFrame(detect);
         }
         detect();
-    } catch(e){
-        console.log("Mic blocked");
-    }
+    } catch(e){ console.log("Mic blocked"); }
 }
 setupMic();
 
-/* music fallback */
-document.body.addEventListener("click",()=>{
-    if(!musicStarted){
-        music.play();
-        musicStarted=true;
-    }
-},{once:true});
-
-function toggleMusic(){
-    music.paused ? music.play() : music.pause();
-}
+function toggleMusic(){ music.paused ? music.play() : music.pause(); }
 
 function finish(){
-    document.body.innerHTML=`
-    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:white;text-align:center;">
-        <h1>I love you forever ❤️</h1>
-        <p>You are my everything.</p>
-        <p>Happy Birthday my wife 🎂</p>
-    </div>`;
+    document.body.innerHTML="<h1 style='text-align:center;margin-top:40vh;color:white;'>I love you forever ❤️</h1>";
 }
 </script>
 
