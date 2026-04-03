@@ -109,6 +109,16 @@ button {
 }
 
 .hidden { display:none; }
+
+#micBtn {
+    margin-top: 20px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    background: #ffcc00;
+    font-weight: bold;
+    cursor: pointer;
+}
 </style>
 </head>
 
@@ -135,17 +145,18 @@ button {
 <h2>Make a wish 🎂</h2>
 <p>Blow into the mic 🎤</p>
 <div class="cake"><div class="candle"><div class="flame" id="flame"></div></div></div>
+<button id="micBtn">Enable Microphone 🎤</button>
 <div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div>
 </div>
 
-<!-- PAGES -->
+<!-- PAGES 3-7 -->
 <div class="page"><img src="photo2.jpg"><div class="text" id="text3"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo3.jpg"><div class="text" id="text4"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo4.jpg"><div class="text" id="text5"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo5.jpg"><div class="text" id="text6"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo6.jpg"><div class="text" id="text7"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 
-<!-- SECOND LAST PAGE -->
+<!-- SECOND LAST PAGE (Page 8) -->
 <div class="page">
 <div class="text" id="text8"></div>
 <div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div>
@@ -170,6 +181,7 @@ const music=document.getElementById("music");
 let musicStarted=false;
 let typedPages={};
 
+// Page navigation
 function showPage(i){
     pages.forEach((p,index)=>{
         p.classList.remove("active","flipped");
@@ -183,6 +195,7 @@ function showPage(i){
 function nextPage(){ if(currentPage<pages.length-1){currentPage++;showPage(currentPage);} }
 function prevPage(){ if(currentPage>0){currentPage--;showPage(currentPage);} }
 
+// Typing effect
 function typeWriter(text,id,speed=20){
     if(typedPages[id]) return;
     typedPages[id]=true;
@@ -235,33 +248,40 @@ I hope you have the best birthday weekend ever. Enjoy your presents.`,"text8");
     }
 }
 
-/* MIC detection */
-async function setupMic(){
-    try{
-        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-        const ctx=new AudioContext();
-        const mic=ctx.createMediaStreamSource(stream);
-        const analyser=ctx.createAnalyser();
-        mic.connect(analyser);
-        analyser.fftSize=256;
-        const data=new Uint8Array(analyser.frequencyBinCount);
-
-        function detect(){
-            analyser.getByteFrequencyData(data);
-            let volume=data.reduce((a,b)=>a+b)/data.length;
-            if(volume>95){ flame.classList.add("hidden"); if(!musicStarted){ music.play(); musicStarted=true; } }
-            requestAnimationFrame(detect);
-        }
-        detect();
-    } catch(e){ console.log("Mic blocked"); }
-}
-setupMic();
-
+// Toggle music
 function toggleMusic(){ music.paused ? music.play() : music.pause(); }
 
+// Finish
 function finish(){
     document.body.innerHTML="<h1 style='text-align:center;margin-top:40vh;color:white;'>I love you forever ❤️</h1>";
 }
+
+// Microphone activation button
+const micBtn = document.getElementById("micBtn");
+micBtn.addEventListener("click", async () => {
+    micBtn.disabled = true;
+    micBtn.innerText = "Mic Enabled ✅";
+    try{
+        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+        const ctx = new AudioContext();
+        const mic = ctx.createMediaStreamSource(stream);
+        const analyser = ctx.createAnalyser();
+        mic.connect(analyser);
+        analyser.fftSize = 256;
+        const data = new Uint8Array(analyser.frequencyBinCount);
+
+        function detect(){
+            analyser.getByteFrequencyData(data);
+            let volume = data.reduce((a,b)=>a+b)/data.length;
+            if(volume > 95){
+                flame.classList.add("hidden");
+                if(!musicStarted){ music.play(); musicStarted = true; }
+            }
+            requestAnimationFrame(detect);
+        }
+        detect();
+    }catch(e){ console.log("Mic blocked"); }
+});
 </script>
 
 </body>
