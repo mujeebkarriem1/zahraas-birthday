@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For My Wife ❤️</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
 body {
     margin:0;
@@ -14,14 +12,12 @@ body {
     background:#3fa9f5;
     overflow:auto;
 }
-
 .book {
     position:relative;
     width:100%;
     height:100vh;
     perspective:2000px;
 }
-
 .page {
     position:absolute;
     width:100%;
@@ -38,100 +34,41 @@ body {
     padding:20px;
     backface-visibility:hidden;
 }
-
 .page.active { transform:rotateY(0); z-index:2; }
 .page.flipped { transform:rotateY(-180deg); }
-
-img {
-    width:80%;
-    max-width:300px;
-    border-radius:20px;
-}
-
-.text {
-    margin-top:20px;
-    font-size:18px;
-    white-space:pre-line;
-    text-align:center;
-}
-
-.controls {
-    position:absolute;
-    bottom:20px;
-}
-
-button {
-    padding:10px 15px;
-    border:none;
-    border-radius:10px;
-    margin:5px;
-}
-
-.music-btn {
-    position:absolute;
-    top:20px;
-    right:20px;
-}
-
-/* cake */
-.cake {
-    position:absolute;
-    bottom:80px;
-    width:140px;
-    height:140px;
-    background:#ff69b4;
-    border-radius:10px;
-}
-
-.candle {
-    width:10px;
-    height:50px;
-    background:white;
-    position:absolute;
-    top:-50px;
-    left:65px;
-}
-
+img { width:80%; max-width:300px; border-radius:20px; }
+.text { margin-top:20px; font-size:18px; white-space:pre-line; text-align:center; }
+.controls { position:absolute; bottom:20px; }
+button { padding:10px 15px; border:none; border-radius:10px; margin:5px; cursor:pointer; }
+.music-btn { position:absolute; top:20px; right:20px; z-index:10; }
+.cake { position:absolute; bottom:80px; width:140px; height:140px; background:#ff69b4; border-radius:10px; }
+.candle { width:10px; height:50px; background:white; position:absolute; top:-50px; left:65px; }
 .flame {
-    width:20px;
-    height:30px;
+    width:20px; height:30px;
     background:radial-gradient(circle, yellow 20%, orange 60%, red);
     border-radius:50%;
-    position:absolute;
-    top:-30px;
-    left:-5px;
+    position:absolute; top:-30px; left:-5px;
     animation:flicker 0.15s infinite alternate;
 }
-
 @keyframes flicker {
     0% { transform: scale(1) rotate(-2deg); }
     100% { transform: scale(1.2) rotate(2deg); }
 }
-
 .hidden { display:none; }
-
-#micBtn {
-    margin-top: 20px;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: none;
-    background: #ffcc00;
-    font-weight: bold;
-    cursor: pointer;
-}
+#micBtn { margin-top: 20px; padding: 10px 15px; border-radius: 10px; border: none; background: #ffcc00; font-weight: bold; cursor: pointer; }
+#animationCanvas { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
 </style>
 </head>
-
 <body>
 
-<audio id="music" loop>
+<audio id="music" loop autoplay>
 <source src="YOUR-MUSIC-LINK.mp3">
 </audio>
-
 <button class="music-btn" onclick="toggleMusic()">🎵</button>
 
-<div class="book">
+<canvas id="animationCanvas"></canvas>
 
+<div class="book">
 <!-- PAGE 1 -->
 <div class="page active">
 <h2>Happy Birthday My Love ❤️</h2>
@@ -156,7 +93,7 @@ button {
 <div class="page"><img src="photo5.jpg"><div class="text" id="text6"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 <div class="page"><img src="photo6.jpg"><div class="text" id="text7"></div><div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div></div>
 
-<!-- SECOND LAST PAGE (Page 8) -->
+<!-- SECOND LAST PAGE -->
 <div class="page">
 <div class="text" id="text8"></div>
 <div class="controls"><button onclick="prevPage()">⬅️</button><button onclick="nextPage()">➡️</button></div>
@@ -164,12 +101,8 @@ button {
 
 <!-- FINAL PAGE -->
 <div class="page">
-<div class="controls">
-<button onclick="prevPage()">⬅️ Back</button>
-<button onclick="finish()">❤️</button>
+<div class="controls"><button onclick="prevPage()">⬅️ Back</button><button onclick="finish()">❤️</button></div>
 </div>
-</div>
-
 </div>
 
 <script>
@@ -177,7 +110,6 @@ let currentPage=0;
 const pages=document.querySelectorAll(".page");
 const flame=document.getElementById("flame");
 const music=document.getElementById("music");
-
 let musicStarted=false;
 let typedPages={};
 
@@ -190,8 +122,8 @@ function showPage(i){
     });
     if(i===1 && flame){ flame.classList.remove("hidden"); }
     startTyping();
+    handleAnimationCanvas();
 }
-
 function nextPage(){ if(currentPage<pages.length-1){currentPage++;showPage(currentPage);} }
 function prevPage(){ if(currentPage>0){currentPage--;showPage(currentPage);} }
 
@@ -202,16 +134,9 @@ function typeWriter(text,id,speed=20){
     let i=0;
     let el=document.getElementById(id);
     if(!el) return;
-    function t(){
-        if(i<text.length){
-            el.innerHTML+=text.charAt(i);
-            i++;
-            setTimeout(t,speed);
-        }
-    }
+    function t(){ if(i<text.length){ el.innerHTML+=text.charAt(i); i++; setTimeout(t,speed); } }
     t();
 }
-
 function startTyping(){
     if(currentPage===0){
         typeWriter("You make my life brighter every single day. This is our first birthday married, and I’m so lucky to call you my wife ❤️","text1");
@@ -248,15 +173,13 @@ I hope you have the best birthday weekend ever. Enjoy your presents.`,"text8");
     }
 }
 
-// Toggle music
+// Music toggle
 function toggleMusic(){ music.paused ? music.play() : music.pause(); }
 
-// Finish
-function finish(){
-    document.body.innerHTML="<h1 style='text-align:center;margin-top:40vh;color:white;'>I love you forever ❤️</h1>";
-}
+// Finish page
+function finish(){ document.body.innerHTML="<h1 style='text-align:center;margin-top:40vh;color:white;'>I love you forever ❤️</h1>"; }
 
-// Microphone activation button
+// Microphone button
 const micBtn = document.getElementById("micBtn");
 micBtn.addEventListener("click", async () => {
     micBtn.disabled = true;
@@ -269,20 +192,63 @@ micBtn.addEventListener("click", async () => {
         mic.connect(analyser);
         analyser.fftSize = 256;
         const data = new Uint8Array(analyser.frequencyBinCount);
-
         function detect(){
             analyser.getByteFrequencyData(data);
             let volume = data.reduce((a,b)=>a+b)/data.length;
-            if(volume > 95){
-                flame.classList.add("hidden");
-                if(!musicStarted){ music.play(); musicStarted = true; }
-            }
+            if(volume > 95){ flame.classList.add("hidden"); if(!musicStarted){ music.play(); musicStarted = true; } }
             requestAnimationFrame(detect);
         }
         detect();
     }catch(e){ console.log("Mic blocked"); }
 });
-</script>
 
+// Animation for last page
+const canvas = document.getElementById("animationCanvas");
+const ctx = canvas.getContext("2d");
+let stars=[], hearts=[], animationId;
+
+function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function createStars(){ stars=[]; for(let i=0;i<50;i++){ stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,s:Math.random()*2+1,dx:(Math.random()-0.5)*1,dy:(Math.random()-0.5)*1}); } }
+function createHearts(){ hearts=[]; for(let i=0;i<20;i++){ hearts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,s:Math.random()*15+5,dy:Math.random()*1+0.5}); } }
+
+function drawAnimation(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+        ctx.fillStyle="white";
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.s,0,Math.PI*2);
+        ctx.fill();
+        s.x+=s.dx; s.y+=s.dy;
+        if(s.x>canvas.width) s.x=0; if(s.x<0) s.x=canvas.width;
+        if(s.y>canvas.height) s.y=0; if(s.y<0) s.y=canvas.height;
+    });
+    hearts.forEach(h=>{
+        ctx.fillStyle="red";
+        ctx.beginPath();
+        ctx.moveTo(h.x,h.y);
+        ctx.arc(h.x,h.y-h.s/2,h.s/2,Math.PI,0);
+        ctx.arc(h.x+h.s,h.y-h.s/2,h.s/2,Math.PI,0);
+        ctx.lineTo(h.x+h.s/2,h.y+h.s);
+        ctx.closePath();
+        ctx.fill();
+        h.y-=h.dy; if(h.y<-50) h.y=canvas.height+50;
+    });
+    animationId=requestAnimationFrame(drawAnimation);
+}
+
+function handleAnimationCanvas(){
+    cancelAnimationFrame(animationId);
+    if(currentPage === pages.length-1){
+        createStars();
+        createHearts();
+        drawAnimation();
+    }else{
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+}
+</script>
 </body>
 </html>
